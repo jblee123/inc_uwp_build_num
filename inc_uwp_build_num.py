@@ -61,7 +61,13 @@ url = server + '/cmd/next_build_num'
 
 post_fields = {'product': product, 'version': version_num, 'commit': commit}
 request = Request(url, urlencode(post_fields).encode())
-result = urlopen(request).read().decode()
+try:
+    result = urlopen(request).read().decode()
+except:
+    err = sys.exc_info()[1]
+    print('error: could not connect to server to get next build number:\n{0}'.
+        format(err))
+    sys.exit(1)
 
 try:
     # Use literal_eval() for safety since we're eval'ing untrusted code.
